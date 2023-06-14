@@ -1,3 +1,4 @@
+use core::panic;
 use serde::Deserialize;
 use std::env;
 use std::fmt;
@@ -13,21 +14,42 @@ pub fn get_config() -> Config {
     // 1 comes last when I get all the values figured out
     let env_config: &str = "FROGGY_CONFIG";
 
-    let mut user_file_path: &str = ""; // user defined
+    let user_file_path: &str = ""; // user defined
 
     // 2
-    match env::var(env_config) {
-        Ok(user_file_path) => println!("{env_config}: {user_file_path:?}"),
+    let user_file_path = match env::var(env_config) {
+        Ok(success) => {
+            println!("{env_config}: {user_file_path:?}");
+            success
+        }
         Err(_e) => {
             println!(
                 "couldn't read '${env_config}'! trying default config at {default_config_file}"
-            ); // test making this obscenely long so it will fmt on save
-            user_file_path = default_config_file;
+            );
+            default_config_file.to_string()
         }
     };
     //precedence?? maybe set boolean
-    let contents: &str = &fs::read_to_string(user_file_path).unwrap();
-    let json: Config = serde_json::from_str(contents).unwrap();
+    let contents: String = match fs::read_to_string(user_file_path) {
+        Ok(success) => {
+            println!("we read the config file correctyl");
+            success
+        }
+        Err(e) => {
+            println!("no config file found");
+            panic!("try again another day ${e}")
+        }
+    };
+    let json: Config = match serde_json::from_str(&contents) {
+        Ok(success) => {
+            println!("parsed json!!!!");
+            success
+        }
+        Err(e) => {
+            println!("couldn't parse json");
+            panic!("${e}")
+        }
+    };
     return json;
 }
 

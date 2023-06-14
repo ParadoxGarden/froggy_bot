@@ -1,0 +1,5 @@
+services:
+  web: 
+    build: .
+    environment:
+      - FROGGY_CONFIG=/usr/src/froggy/config.json
