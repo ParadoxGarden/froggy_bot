@@ -4,6 +4,6 @@ WORKDIR /usr/src/froggy
 
 COPY . .
 
-RUN cargo build
+RUN cargo install --path .
 
-CMD ["./target/debug/froggy_bot"]
+CMD ["froggy_bot"]
