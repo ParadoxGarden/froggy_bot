@@ -47,7 +47,7 @@ pub fn get_config() -> Config {
         }
         Err(e) => {
             println!("couldn't parse json");
-            panic!("${e}")
+            panic!("${e}") 
         }
     };
     return json;
